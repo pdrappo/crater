@@ -171,6 +171,9 @@ class OnboardingController extends Controller
         }
 
         $company->name = $request->name;
+        $company->itin = $request->itin; // Numero de documento
+        $company->itin_type_id = $request->itin_type_id; // Tipo de numero de documento
+        $company->iti_type_id = $request->iti_type_id; // Tipo de tributo
         $company->unique_hash = str_random(60);
         $company->save();
         $user->company()->associate($company);

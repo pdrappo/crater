@@ -32,7 +32,7 @@
         <div class="col-md-6">
           <label class="form-label">{{ $t('wizard.iti_type') }}</label><span class="text-danger"> *</span>
           <base-select
-            v-model="companyData.iti_type_id"
+            v-model="iti_type"
             :class="{'error': $v.companyData.iti_type_id.$error }"
             :options="iti_types"
             :searchable="true"
@@ -49,7 +49,7 @@
         <div class="col-md-2">
           <label class="form-label">{{ $t('wizard.itin_type') }}</label><span class="text-danger"> *</span>
           <base-select
-            v-model="companyData.itin_type_id"
+            v-model="itin_type"
             :class="{'error': $v.companyData.itin_type_id.$error }"
             :options="itin_types"
             :searchable="true"
@@ -213,6 +213,8 @@ export default {
         movable: true,
         zoomable: true
       },
+      itin_type: null,
+      iti_type: null,
       companyData: {
         logo: '',
         name: null,
@@ -263,6 +265,14 @@ export default {
     }
   },
   watch: {
+    itin_type ({ id }) {
+      this.companyData.itin_type_id = id
+      return true
+    },
+    iti_type ({ id }) {
+      this.companyData.iti_type_id = id
+      return true
+    },
     country ({ id }) {
       this.companyData.country_id = id
       return true
@@ -289,6 +299,7 @@ export default {
         return true
       }
       this.loading = true
+      debugger;
       let response = await window.axios.post('/api/admin/onboarding/company', this.companyData)
 
       if (response.data) {

@@ -112,6 +112,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'user' => $user,
+            'request' => $request,
             'success' => true
         ]);
     }
