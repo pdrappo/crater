@@ -46,6 +46,22 @@ Route::get('/countries', [
     'uses' => 'LocationController@getCountries'
 ]);
 
+// Tax Identification Number Types
+//----------------------------------
+
+Route::get('/itin-types', [
+    'as' => 'tax-identification-number-types',
+    'uses' => 'CompanyController@getTaxIdentificationNumberTypes'
+]);
+
+// Tax Identification Types
+//----------------------------------
+
+Route::get('/iti-types', [
+    'as' => 'tax-identification-types',
+    'uses' => 'CompanyController@getTaxIdentificationTypes'
+]);
+
 
 // Onboarding
 //----------------------------------

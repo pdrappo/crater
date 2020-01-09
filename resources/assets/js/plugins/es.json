@@ -62,14 +62,15 @@
     "four_zero_four": "404",
     "you_got_lost": "Whoops! ¡Te perdiste!",
     "go_home": "Volver al Inicio",
-
     "setting_updated": "Configuración actualizada con éxito",
     "select_state": "Seleccionar estado",
     "select_country": "Seleccionar país",
     "select_city": "Seleccionar ciudad",
     "street_1": "Calle 1",
     "street_2": "Calle 2",
-    "action_failed": "Accion Fallida"
+    "action_failed": "Accion Fallida",
+    "select_itin_type": "Seleccione tipo de documento",
+    "select_iti_type": "Seleccione tipo de IVA"
   },
   "dashboard": {
     "select_year": "Seleccionar año",
@@ -835,8 +836,11 @@
     "success": {
       "mail_variables_save_successfully": "Correo electrónico configurado correctamente",
       "database_variables_save_successfully": "Base de datos configurada con éxito."
-    }
-  },
+    },
+    "itin_type": "Tipo de Documento",
+    "iti_type": "Tipo IVA",
+    "itin": "DNI/CUIT"
+},
   "layout_login": {
     "copyright_crater": "Copyright @ Crater - 2020",
     "super_simple_invoicing": "Facturación super simple",

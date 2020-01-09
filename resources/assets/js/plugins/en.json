@@ -77,7 +77,9 @@
     "select_city": "Select City",
     "street_1": "Street 1",
     "street_2": "Street 2",
-    "action_failed": "Action Failed"
+    "action_failed": "Action Failed",
+    "select_itin_type": "Seleccione Tax Identification Number Type",
+    "select_iti_type": "Seleccione Tax Identification Type"
   },
   "dashboard": {
     "select_year": "Select year",
@@ -871,7 +873,10 @@
     "success": {
       "mail_variables_save_successfully": "Email configured successfully",
       "database_variables_save_successfully": "Database configured successfully."
-    }
+    },
+    "itin_type": "Number Type",
+    "iti_type": "Tax Identification Type",
+    "itin": "Document Number"
   },
   "layout_login": {
     "copyright_crater": "Copyright @ Crater - 2020",

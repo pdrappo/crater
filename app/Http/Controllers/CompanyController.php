@@ -17,6 +17,8 @@ use Crater\Space\DateFormatter;
 use Crater\Space\TimeZones;
 use Crater\Currency;
 use Crater\CompanySetting;
+use Crater\TaxIdentificationNumberType;
+use Crater\TaxIdentificationType;
 
 class CompanyController extends Controller
 {
@@ -94,6 +96,9 @@ class CompanyController extends Controller
         $user = User::find(1);
         $company = $user->company;
         $company->name = $request->name;
+        $company->itin = $request->itin; // Numero de documento
+        $company->itin_type_id = $request->itin_type_id; // Tipo de numero de documento
+        $company->iti_type_id = $request->iti_type_id; // Tipo de tributo
         $company->save();
 
         if ($request->has('logo')) {
@@ -362,6 +367,32 @@ class CompanyController extends Controller
         return response()->json([
             'user' => $user,
             'success' => true
+        ]);
+    }
+
+
+
+    /**
+     * Retrive a list of Tax Identification Number Types.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTaxIdentificationNumberTypes()
+    {
+        return response()->json([
+            'itin_types' => TaxIdentificationNumberType::all()
+        ]);
+    }
+
+    /**
+     * Retrive a list of Tax Identification Types.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTaxIdentificationTypes()
+    {
+        return response()->json([
+            'iti_types' => TaxIdentificationType::all()
         ]);
     }
 }

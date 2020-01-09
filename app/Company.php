@@ -11,7 +11,14 @@ class Company extends Model implements HasMedia
 {
     use HasMediaTrait;
 
-    protected $fillable = ['name', 'logo', 'unique_hash'];
+    protected $fillable = [
+        'name',
+        'logo',
+        'unique_hash',
+        'itin', // Numero de documento
+        'itin_type_id', // Tipo de numero de documento
+        'iti_type_id', // Tipo de tributo
+    ];
 
     protected $appends=['logo'];
 
@@ -32,5 +39,15 @@ class Company extends Model implements HasMedia
     public function settings()
     {
         return $this->hasMany(CompanySetting::class);
+    }
+
+    public function taxIdentificationNumberType()
+    {
+        return $this->belongsTo(TaxIdentificationNumberType::class);
+    }
+
+    public function taxIdentificationType()
+    {
+        return $this->belongsTo(TaxIdentificationType::class);
     }
 }

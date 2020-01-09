@@ -9,6 +9,7 @@ class TaxType extends Model
     protected $fillable = [
         'name',
         'percent',
+        'codigo_afip',
         'company_id',
         'compound_tax',
         'collective_tax',

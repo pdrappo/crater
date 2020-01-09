@@ -27,6 +27,9 @@ class User extends Authenticatable implements HasMedia
      */
     protected $fillable = [
         'name',
+        'itin', // Numero de documento
+        'itin_type_id', // Tipo de numero de documento
+        'iti_type_id', // Tipo de tributo
         'email',
         'company_id',
         'password',
@@ -98,6 +101,16 @@ class User extends Authenticatable implements HasMedia
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function taxIdentificationNumberType()
+    {
+        return $this->belongsTo(TaxIdentificationNumberType::class);
+    }
+
+    public function taxIdentificationType()
+    {
+        return $this->belongsTo(TaxIdentificationType::class);
     }
 
     public function addresses()

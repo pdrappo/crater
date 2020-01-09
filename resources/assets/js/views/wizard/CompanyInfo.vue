@@ -30,6 +30,56 @@
       </div>
       <div class="row">
         <div class="col-md-6">
+          <label class="form-label">{{ $t('wizard.iti_type') }}</label><span class="text-danger"> *</span>
+          <base-select
+            v-model="companyData.iti_type_id"
+            :class="{'error': $v.companyData.iti_type_id.$error }"
+            :options="iti_types"
+            :searchable="true"
+            :allow-empty="false"
+            :show-labels="false"
+            :placeholder="$t('general.select_iti_type')"
+            track-by="id"
+            label="name"
+          />
+          <div v-if="$v.companyData.iti_type_id.$error">
+            <span v-if="!$v.companyData.iti_type_id.required" class="text-danger">{{ $tc('validation.required') }}</span>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">{{ $t('wizard.itin_type') }}</label><span class="text-danger"> *</span>
+          <base-select
+            v-model="companyData.itin_type_id"
+            :class="{'error': $v.companyData.itin_type_id.$error }"
+            :options="itin_types"
+            :searchable="true"
+            :allow-empty="false"
+            :show-labels="false"
+            :placeholder="$t('general.select_itin_type')"
+            track-by="id"
+            label="name"
+          />
+          <div v-if="$v.companyData.itin_type_id.$error">
+            <span v-if="!$v.companyData.itin_type_id.required" class="text-danger">{{ $tc('validation.required') }}</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">{{ $t('wizard.itin') }}</label><span class="text-danger"> *</span>
+          <base-input
+            :invalid="$v.companyData.itin.$error"
+            v-model.trim="companyData.itin"
+            type="number"
+            name="itin"
+            @input="$v.companyData.itin.$touch()"
+          />
+          <div v-if="$v.companyData.itin.$error">
+            <span v-if="!$v.companyData.itin.required" class="text-danger">{{ $tc('validation.required') }}</span>
+            <span v-if="!$v.companyData.itin.maxLength" class="text-danger">{{ $t('validation.description_maxlength') }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
           <label class="form-label">{{ $t('wizard.company_name') }}</label><span class="text-danger"> *</span>
           <base-input
             :invalid="$v.companyData.name.$error"
@@ -166,6 +216,9 @@ export default {
       companyData: {
         logo: '',
         name: null,
+        itin: 0,
+        itin_type_id: 1,
+        iti_type_id: 1,
         address_street_1: '',
         address_street_2: '',
         city: '',
@@ -177,6 +230,8 @@ export default {
       loading: false,
       step: 1,
       countries: [],
+      itin_types: [],
+      iti_types: [],
       country: null,
       previewLogo: null
     }
@@ -186,7 +241,17 @@ export default {
       name: {
         required
       },
+      itin: {
+        required,
+        maxLength: maxLength(11)
+      },
       country_id: {
+        required
+      },
+      itin_type_id: {
+        required
+      },
+      iti_type_id: {
         required
       },
       address_street_1: {
@@ -205,6 +270,8 @@ export default {
   },
   mounted () {
     this.fetchCountry()
+    this.fetchTaxIdentificationNumberType()
+    this.fetchTaxIdentificationType()
   },
   methods: {
     cropperHandler (cropper) {
@@ -259,6 +326,18 @@ export default {
       let res = await window.axios.get('/api/countries')
       if (res) {
         this.countries = res.data.countries
+      }
+    },
+    async fetchTaxIdentificationNumberType () {
+      let res = await window.axios.get('/api/itin-types')
+      if (res) {
+        this.itin_types = res.data.itin_types
+      }
+    },
+    async fetchTaxIdentificationType () {
+      let res = await window.axios.get('/api/iti-types')
+      if (res) {
+        this.iti_types = res.data.iti_types
       }
     }
   }
