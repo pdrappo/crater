@@ -43,6 +43,14 @@ export default {
 
   [types.SET_SELECT_ALL_STATE] (state, data) {
     state.selectAllField = data
+  },
+
+  [types.SET_ITIN_TYPES] (state, data) {
+    state.itinTypes = data
+  },
+
+  [types.SET_ITI_TYPES] (state, data) {
+    state.itiTypes = data
   }
 
 }

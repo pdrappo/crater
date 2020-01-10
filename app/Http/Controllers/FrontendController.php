@@ -27,7 +27,9 @@ class FrontendController extends Controller
                 'user',
                 'items',
                 'user.billingAddress',
-                'user.shippingAddress'
+                'user.shippingAddress',
+                'user.taxIdentificationNumberType',
+                'user.taxIdentificationType'
             )
             ->where('unique_hash', $id)
             ->first();
@@ -126,16 +128,18 @@ class FrontendController extends Controller
      */
     public function getCustomerInvoicePdf($id)
     {
+
         $invoice = Invoice::with([
                 'items',
                 'items.taxes',
                 'user',
+                'user.taxIdentificationNumberType',
+                'user.taxIdentificationType',
                 'invoiceTemplate',
                 'taxes'
             ])
             ->where('unique_hash', $id)
             ->first();
-
         $taxTypes = [];
         $taxes = [];
         $labels = [];
@@ -307,12 +311,13 @@ class FrontendController extends Controller
                 'items',
                 'items.taxes',
                 'user',
+                'user.taxIdentificationNumberType',
+                'user.taxIdentificationType',
                 'invoiceTemplate',
                 'taxes'
             ])
             ->where('unique_hash', $id)
             ->first();
-
         $taxTypes = [];
         $taxes = [];
         $labels = [];
@@ -344,7 +349,7 @@ class FrontendController extends Controller
 
         $invoiceTemplate = InvoiceTemplate::find($invoice->invoice_template_id);
         $company = Company::find($invoice->company_id);
-        $companyAddress = User::with(['addresses', 'addresses.country'])->find(1);
+        $companyAddress = User::with(['addresses', 'addresses.country', 'taxIdentificationNumberType', 'taxIdentificationType'])->find(1);
 
         $logo = $company->getMedia('logo')->first();
 

@@ -6,7 +6,9 @@ const initialState = {
   customers: [],
   totalCustomers: 0,
   selectAllField: false,
-  selectedCustomers: []
+  selectedCustomers: [],
+  itinTypes: [],
+  itiTypes: []
 }
 
 export default {

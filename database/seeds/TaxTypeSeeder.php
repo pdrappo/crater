@@ -33,7 +33,7 @@ class TaxTypeSeeder extends Seeder
             ]);
 
         TaxType::create([
-            'name' => '0%',
+            'name' => 'NETO',
             'codigo_afip' => 3,
             'percent' => 0,
             'company_id' => 1,
@@ -43,9 +43,9 @@ class TaxTypeSeeder extends Seeder
             ]);
 
         TaxType::create([
-            'name' => '21%',
+            'name' => 'IVA',
             'codigo_afip' => 5,
-            'percent' => 0,
+            'percent' => 21,
             'company_id' => 1,
             'compound_tax' => '',
             'collective_tax' => '',

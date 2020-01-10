@@ -29,23 +29,6 @@
         />
       </div>
       <div class="row">
-        <div class="col-md-6">
-          <label class="form-label">{{ $t('wizard.iti_type') }}</label><span class="text-danger"> *</span>
-          <base-select
-            v-model="iti_type"
-            :class="{'error': $v.companyData.iti_type_id.$error }"
-            :options="iti_types"
-            :searchable="true"
-            :allow-empty="false"
-            :show-labels="false"
-            :placeholder="$t('general.select_iti_type')"
-            track-by="id"
-            label="name"
-          />
-          <div v-if="$v.companyData.iti_type_id.$error">
-            <span v-if="!$v.companyData.iti_type_id.required" class="text-danger">{{ $tc('validation.required') }}</span>
-          </div>
-        </div>
         <div class="col-md-2">
           <label class="form-label">{{ $t('wizard.itin_type') }}</label><span class="text-danger"> *</span>
           <base-select
@@ -75,6 +58,23 @@
           <div v-if="$v.companyData.itin.$error">
             <span v-if="!$v.companyData.itin.required" class="text-danger">{{ $tc('validation.required') }}</span>
             <span v-if="!$v.companyData.itin.maxLength" class="text-danger">{{ $t('validation.description_maxlength') }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">{{ $t('wizard.iti_type') }}</label><span class="text-danger"> *</span>
+          <base-select
+            v-model="iti_type"
+            :class="{'error': $v.companyData.iti_type_id.$error }"
+            :options="iti_types"
+            :searchable="true"
+            :allow-empty="false"
+            :show-labels="false"
+            :placeholder="$t('general.select_iti_type')"
+            track-by="id"
+            label="name"
+          />
+          <div v-if="$v.companyData.iti_type_id.$error">
+            <span v-if="!$v.companyData.iti_type_id.required" class="text-danger">{{ $tc('validation.required') }}</span>
           </div>
         </div>
       </div>
@@ -243,10 +243,6 @@ export default {
       name: {
         required
       },
-      itin: {
-        required,
-        maxLength: maxLength(11)
-      },
       country_id: {
         required
       },
@@ -299,7 +295,6 @@ export default {
         return true
       }
       this.loading = true
-      debugger;
       let response = await window.axios.post('/api/admin/onboarding/company', this.companyData)
 
       if (response.data) {

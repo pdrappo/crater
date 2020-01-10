@@ -129,7 +129,7 @@
     "title": "Customers",
     "add_customer": "Add Customer",
     "contacts_list": "Customer List",
-    "name": "Name",
+    "name": "Business Name",
     "display_name": "Display Name",
     "primary_contact_name": "Primary Contact Name",
     "contact_name": "Contact Name",
@@ -168,7 +168,10 @@
     "confirm_delete": "You will not be able to recover this Customer | You will not be able to recover these Customers",
     "created_message": "Customer created successfully",
     "updated_message": "Customer updated successfully",
-    "deleted_message": "Customer deleted successfully | Customers deleted successfully"
+    "deleted_message": "Customer deleted successfully | Customers deleted successfully",
+    "itin_type": "Number Type",
+    "iti_type": "Tax Identification Type",
+    "itin": "Document Number"
   },
   "items": {
     "title": "Items",

@@ -43,11 +43,11 @@ class Company extends Model implements HasMedia
 
     public function taxIdentificationNumberType()
     {
-        return $this->belongsTo(TaxIdentificationNumberType::class);
+        return $this->belongsTo(TaxIdentificationNumberType::class, 'itin_type_id');
     }
 
     public function taxIdentificationType()
     {
-        return $this->belongsTo(TaxIdentificationType::class);
+        return $this->belongsTo(TaxIdentificationType::class, 'iti_type_id');
     }
 }

@@ -26,6 +26,57 @@
           <div class="row">
             <div class="section-title col-sm-2">{{ $t('customers.basic_info') }}</div>
             <div class="col-sm-5">
+
+              <div class="form-group">
+                <label class="form-label">{{ $t('wizard.itin_type') }}</label><span class="text-danger"> *</span>
+                <base-select
+                  v-model="itin_type"
+                  :class="{'error': $v.formData.itin_type_id.$error }"
+                  :options="itinTypes"
+                  :searchable="true"
+                  :allow-empty="false"
+                  :show-labels="false"
+                  :placeholder="$t('general.select_itin_type')"
+                  track-by="id"
+                  label="name"
+                />
+                <div v-if="$v.formData.itin_type_id.$error">
+                  <span v-if="!$v.formData.itin_type_id.required" class="text-danger">{{ $tc('validation.required') }}</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ $t('wizard.iti_type') }}</label><span class="text-danger"> *</span>
+                <base-select
+                  v-model="iti_type"
+                  :class="{'error': $v.formData.iti_type_id.$error }"
+                  :options="itiTypes"
+                  :searchable="true"
+                  :allow-empty="false"
+                  :show-labels="false"
+                  :placeholder="$t('general.select_iti_type')"
+                  track-by="id"
+                  label="name"
+                />
+                <div v-if="$v.formData.iti_type_id.$error">
+                  <span v-if="!$v.formData.iti_type_id.required" class="text-danger">{{ $tc('validation.required') }}</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{{ $t('wizard.itin') }}</label><span class="text-danger"> *</span>
+                <base-input
+                  :invalid="$v.formData.itin.$error"
+                  v-model.trim="formData.itin"
+                  type="number"
+                  name="itin"
+                  @input="$v.formData.itin.$touch()"
+                />
+                <div v-if="$v.formData.itin.$error">
+                  <span v-if="!$v.formData.itin.required" class="text-danger">{{ $tc('validation.required') }}</span>
+                  <span v-if="!$v.formData.itin.maxLength" class="text-danger">{{ $t('validation.description_maxlength') }}</span>
+                </div>
+              </div>
+
               <div class="form-group">
                 <label class="form-label">{{ $t('customers.display_name') }}</label><span class="text-danger"> *</span>
                 <base-input
@@ -41,6 +92,26 @@
                   <span v-if="!$v.formData.name.required" class="text-danger">{{ $tc('validation.required') }}</span>
                   <span v-if="!$v.formData.name.minLength" class="text-danger"> {{ $tc('validation.name_min_length', $v.formData.name.$params.minLength.min, { count: $v.formData.name.$params.minLength.min }) }} </span>
                 </div>
+              </div>
+            </div>
+            <div class="col-sm-5">
+              <div class="form-group">
+                <label class="form-label">{{ $t('customers.primary_contact_name') }}</label>
+                <base-input
+                  v-model.trim="formData.contact_name"
+                  :label="$t('customers.contact_name')"
+                  type="text"
+                  tab-index="2"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">{{ $t('customers.phone') }}</label>
+                <base-input
+                  v-model.trim="formData.phone"
+                  type="text"
+                  name="phone"
+                  tab-index="4"
+                />
               </div>
               <div class="form-group">
                 <label class="form-label">{{ $t('customers.email') }}</label>
@@ -70,38 +141,6 @@
                   label="name"
                   track-by="id"
                 />
-              </div>
-            </div>
-            <div class="col-sm-5">
-              <div class="form-group">
-                <label class="form-label">{{ $t('customers.primary_contact_name') }}</label>
-                <base-input
-                  v-model.trim="formData.contact_name"
-                  :label="$t('customers.contact_name')"
-                  type="text"
-                  tab-index="2"
-                />
-              </div>
-              <div class="form-group">
-                <label class="form-label">{{ $t('customers.phone') }}</label>
-                <base-input
-                  v-model.trim="formData.phone"
-                  type="text"
-                  name="phone"
-                  tab-index="4"
-                />
-              </div>
-              <div class="form-group">
-                <label class="form-label">{{ $t('customers.website') }}</label>
-                <base-input
-                  v-model="formData.website"
-                  :invalid="$v.formData.website.$error"
-                  type="url"
-                  @input="$v.formData.website.$touch()"
-                />
-                <div v-if="$v.formData.website.$error">
-                  <span v-if="!$v.formData.website.url" class="text-danger">{{ $tc('validation.invalid_url') }}</span>
-                </div>
               </div>
             </div>
           </div>
@@ -331,6 +370,9 @@ export default {
       isCopyFromBilling: false,
       isLoading: false,
       formData: {
+        itin_type_id: null,
+        itin: 0,
+        iti_type_id: null,
         name: null,
         contact_name: null,
         email: null,
@@ -362,6 +404,9 @@ export default {
         address_street_2: null,
         type: 'shipping'
       },
+
+      itin_type: null,
+      iti_type: null,
       currencyList: [],
 
       billing_country: null,
@@ -382,6 +427,17 @@ export default {
       },
       website: {
         url
+      },
+      itin_type_id: {
+        required
+      },
+      itin: {
+        required,
+        maxLength: maxLength(11),
+        minLength: minLength(7)
+      },
+      iti_type_id: {
+        required
       }
     },
     billing: {
@@ -405,6 +461,10 @@ export default {
     ...mapGetters('currency', [
       'defaultCurrency',
       'currencies'
+    ]),
+    ...mapGetters('customer', [
+      'itinTypes',
+      'itiTypes'
     ]),
     isEdit () {
       if (this.$route.name === 'customers.edit') {
@@ -444,6 +504,14 @@ export default {
     }
   },
   watch: {
+    itin_type ({ id }) {
+      this.formData.itin_type_id = id
+      return true
+    },
+    iti_type ({ id }) {
+      this.formData.iti_type_id = id
+      return true
+    },
     billing_country (newCountry) {
       if (newCountry) {
         this.billing.country_id = newCountry.id
@@ -480,7 +548,9 @@ export default {
     ]),
     async loadCustomer () {
       let { data: { customer, currencies, currency } } = await this.fetchCustomer(this.$route.params.id)
-
+      this.formData.itin_type_id = customer.itin_type_id
+      this.formData.itin = customer.itin
+      this.formData.iti_type_id = customer.iti_type_id
       this.formData.id = customer.id
       this.formData.name = customer.name
       this.formData.contact_name = customer.contact_name
@@ -488,6 +558,14 @@ export default {
       this.formData.phone = customer.phone
       this.formData.currency_id = customer.currency_id
       this.formData.website = customer.website
+
+      if (customer.itin_type_id) {
+        this.itin_type = this.itinTypes.find((c) => c.id === customer.itin_type_id)
+      }
+
+      if (customer.iti_type_id) {
+        this.iti_type = this.itiTypes.find((c) => c.id === customer.iti_type_id)
+      }
 
       if (customer.billing_address) {
         this.billing = customer.billing_address

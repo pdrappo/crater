@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Auth;
 use Crater\Company;
 use Crater\CompanySetting;
+use Crater\TaxIdentificationNumberType;
+use Crater\TaxIdentificationType;
 
 class UsersController extends Controller
 {
@@ -60,6 +62,9 @@ class UsersController extends Controller
             ->latest()
             ->get();
 
+        $iti_types = TaxIdentificationType::with('taxType')->get();
+        $itin_types = TaxIdentificationNumberType::all();
+
         return response()->json([
             'user' => $user,
             'customers' => $customers,
@@ -74,6 +79,8 @@ class UsersController extends Controller
             'paymentMethods' => $paymentMethods,
             'units' => $units,
             'fiscal_year' => $fiscal_year,
+            'itiTypes' => $iti_types,
+            'itinTypes' => $itin_types
         ]);
     }
 

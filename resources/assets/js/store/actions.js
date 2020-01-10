@@ -6,7 +6,9 @@ import * as preferencesTypes from './modules/settings/preferences/mutation-types
 import * as taxTypeTypes from './modules/tax-type/mutation-types'
 import * as itemTypes from './modules/item/mutation-types'
 import * as paymentModes from './modules/payment/mutation-types'
+import * as customerTypes from './modules/customer/mutation-types'
 
+console.log(customerTypes)
 export default {
   bootstrap ({ commit, dispatch, state }) {
     return new Promise((resolve, reject) => {
@@ -21,6 +23,8 @@ export default {
         commit('preferences/' + preferencesTypes.SET_LANGUAGE_FORMAT, response.data.default_language)
         commit('item/' + itemTypes.SET_ITEM_UNITS, response.data.units)
         commit('payment/' + paymentModes.SET_PAYMENT_MODES, response.data.paymentMethods)
+        commit('customer/' + customerTypes.SET_ITIN_TYPES, response.data.itinTypes)
+        commit('customer/' + customerTypes.SET_ITI_TYPES, response.data.itiTypes)
         commit(types.UPDATE_APP_LOADING_STATUS, true)
         resolve(response)
       }).catch((err) => {
