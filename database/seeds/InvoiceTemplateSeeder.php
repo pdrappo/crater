@@ -29,5 +29,11 @@ class InvoiceTemplateSeeder extends Seeder
             'view' => 'invoice3',
             'path' => '/assets/img/PDF/Template3.png'
         ]);
+
+        InvoiceTemplate::create([
+            'name' => 'Template 4',
+            'view' => 'invoice4',
+            'path' => '/assets/img/PDF/Template3.png'
+        ]);
     }
 }

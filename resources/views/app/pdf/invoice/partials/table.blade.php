@@ -2,12 +2,12 @@
     <tr class="main-table-header">
         <th width="2%" class="ItemTableHeader" style="text-align: right; color: #55547A; padding-right: 20px">#</th>
         <th width="40%" class="ItemTableHeader" style="text-align: left; color: #55547A; padding-left: 0px">Items</th>
-        <th class="ItemTableHeader" style="text-align: right; color: #55547A; padding-right: 20px">Quantity</th>
-        <th class="ItemTableHeader" style="text-align: right; color: #55547A; padding-right: 20px">Price</th>
+        <th class="ItemTableHeader" style="text-align: right; color: #55547A; padding-right: 20px">Cantidad</th>
+        <th class="ItemTableHeader" style="text-align: right; color: #55547A; padding-right: 20px">Importe</th>
         @if($invoice->discount_per_item === 'YES')
-        <th class="ItemTableHeader" style="text-align: right; color: #55547A; padding-left: 10px">Discount</th>
+        <th class="ItemTableHeader" style="text-align: right; color: #55547A; padding-left: 10px">Descuento</th>
         @endif
-        <th class="ItemTableHeader" style="text-align: right; color: #55547A;">Amount</th>
+        <th class="ItemTableHeader" style="text-align: right; color: #55547A;">Total</th>
     </tr>
     @php
         $index = 1
@@ -64,6 +64,17 @@
 
 <hr class="items-table-hr">
 
+<table cellspacing="0px" style="margin-left:20px; margin-top: 10px; float: left;" border="0">
+    <tr>
+        <td style="padding-right:10px; font-size:12px;  color: #55547A;">CAE: 69504382919592</td>
+    </tr>
+    <tr>
+        <td style="padding-right:10px; font-size:12px;  color: #55547A;">Vencimiento CAE: 18/02/2020</td>
+    </tr>
+    <tr>
+        <td style="padding-top:10px;"><img src="data:image/png;base64,{!! DNS1D::getBarcodePNG("69504382919592", "I25+", 2, 50, array(1,1,1), true) !!}" alt="barcode" /></td>
+    </tr>
+</table>
 <table width="100%" cellspacing="0px" style="margin-left:420px; margin-top: 10px" border="0" class="table3 @if(count($invoice->items) > 12) page-break @endif">
     <tr>
         <td class="no-border" style="color: #55547A; padding-left:10px;  font-size:12px;">Subtotal</td>
@@ -99,10 +110,10 @@
         <tr>
             <td class="no-border" style="padding-left:10px; text-align:left; font-size:12px; color: #55547A;">
                 @if($invoice->discount_type === 'fixed')
-                    Discount
+                    Descuento
                 @endif
                 @if($invoice->discount_type === 'percentage')
-                    Discount ({{$invoice->discount}}%)
+                    Descuento ({{$invoice->discount}}%)
                 @endif
             </td>
             <td class="no-border items padd2" style="padding-right:10px; font-weight: 500; text-align: right; font-size:12px;  color: #040405">

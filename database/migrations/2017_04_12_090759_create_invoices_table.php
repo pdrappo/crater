@@ -17,7 +17,13 @@ class CreateInvoicesTable extends Migration
             $table->increments('id');
             $table->date('invoice_date');
             $table->date('due_date');
-            $table->string('invoice_number');
+            $table->integer('invoice_code_id');
+            $table->integer('business_point_number');
+            $table->integer('invoice_number');
+            $table->string('cae_number');
+            $table->string('invoice_type');
+            $table->integer('invoice_type_id');
+            $table->date('cae_expiration_date');
             $table->string('reference_number')->nullable();
             $table->string('status');
             $table->string('paid_status');

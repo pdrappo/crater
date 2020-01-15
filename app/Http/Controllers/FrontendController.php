@@ -199,7 +199,7 @@ class FrontendController extends Controller
             }
         }
 
-        $companyAddress = User::with(['addresses', 'addresses.country'])->find(1);
+        $companyAddress = User::with(['addresses', 'addresses.country', 'taxIdentificationType'])->find(1);
 
         $colors = [
             'invoice_primary_color',
@@ -370,6 +370,15 @@ class FrontendController extends Controller
             ->whereCompany($invoice->company_id)
             ->get();
 
+        // return view('app.pdf.invoice.'.$invoiceTemplate->view, [
+        //     'invoice' => $invoice,
+        //     'company_address' => $companyAddress,
+        //     'logo' => $logo ?? null,
+        //     'colors' => $colorSettings,
+        //     'labels' => $labels,
+        //     'taxes' => $taxes
+        // ]);
+
         view()->share([
             'invoice' => $invoice,
             'company_address' => $companyAddress,
@@ -381,6 +390,8 @@ class FrontendController extends Controller
         $pdf = PDF::loadView('app.pdf.invoice.'.$invoiceTemplate->view);
 
         return $pdf->stream();
+
+
     }
 
     public function getPaymentPdf($id)

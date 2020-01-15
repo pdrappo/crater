@@ -21,7 +21,7 @@
         .header-line {
             color:rgba(0, 0, 0, 0.2);
             position: absolute;
-            top: 80px;
+            top: 100px;
             left: 0px;
             right: -70px;
             width: 100%;
@@ -95,7 +95,7 @@
         }
         .wrapper {
            display: block;
-           padding-top: 50px;
+           padding-top: 70px;
            padding-bottom: 20px;
         }
 
@@ -107,7 +107,7 @@
         .bill-add {
             display: block;
             float:left;
-            width:40%;
+            width:50%;
             padding: 0 0 0 30px;
         }
         .company {
@@ -211,6 +211,15 @@
             line-height: 15px;
             color: #595959;
             margin: 0px;
+        }
+
+        .bill-user-iti {
+            margin-top: 50px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 10px;
+            line-height: 15px;
+            color: #595959;
         }
 
 
@@ -417,6 +426,19 @@
             padding-bottom: 10px;
         }
 
+        .invoice-letter {
+            margin: 0px;
+            padding: 0px;
+            font-size: 45px;
+            font-weight: 600;
+        }
+        .invoice-letter-code-id {
+            margin: 0px;
+            padding: 0px;
+            text-align: left;
+            font-size: 9px;
+        }
+
     </style>
 </head>
 <body>
@@ -432,37 +454,44 @@
                             <h1 class="header-logo-text"> {{$invoice->user->company->name}} </h1>
                             <span class="company-add">
                             {{$company_address->name}}<br>
-                            {{$company_address->taxIdentificationNumberType->name}} {{$company_address->itin}}<br>
-                            {{$company_address->taxIdentificationType->name}}<br>
+                            @if($company_address->addresses[0]['address_street_1'])
+                                {{$company_address->addresses[0]['address_street_1']}},
+                            @endif
+                            @if($company_address->addresses[0]['city'])
+                                {{$company_address->addresses[0]['city']}},
+                            @endif
+                            @if($company_address->addresses[0]['state'])
+                                {{$company_address->addresses[0]['state']}}
+                            @endif
+                            <br>
+                            <strong>{{$company_address->taxIdentificationType->name}}</strong>
                             </span>
                         @endif
                     @endif
                 </td>
-                <td class="header-right company-details">
+                <td class="header-right">
+                    <h1 class="invoice-letter">B</h1>
                     <p class="company-add">
-                        @if($company_address->addresses[0]['address_street_1'])
-                            {{$company_address->addresses[0]['address_street_1']}} <br>
-                        @endif
-
-                        @if($company_address->addresses[0]['address_street_2'])
-                            {{$company_address->addresses[0]['address_street_2']}} <br>
-                        @endif
-                        @if($company_address->addresses[0]['city'])
-                            {{$company_address->addresses[0]['city']}}
-                        @endif
-                        @if($company_address->addresses[0]['state'])
-                            {{$company_address->addresses[0]['state']}}
-                        @endif
-                        @if($company_address->addresses[0]['zip'])
-                            {{$company_address->addresses[0]['zip']}} <br>
-                        @endif
-                        @if($company_address->addresses[0]['country'])
-                            {{$company_address->addresses[0]['country']->name}} <br>
-                        @endif
-                        @if($company_address->addresses[0]['phone'])
-                        {{$company_address->addresses[0]['phone']}} <br>
-                        @endif
+                        CUIT: {{$company_address->itin}}<br>
+                        Ingresos Brutos: {{$company_address->iibb}}<br>
+                        Inicio de Actividades: {{$company_address->bad}}
                     </p>
+                </td>
+                <td class="header-right company-details">
+                    <table>
+                        <tr>
+                            <td class="textStyle1" style="text-align: right; color: #55547A">N°</td>
+                            <td class="textStyle2"> &nbsp;{{$invoice->invoice_number}}</td>
+                        </tr>
+                        <tr>
+                            <td class="textStyle1" style="text-align: left; color: #55547A">Fecha de emisión: </td>
+                            <td class="textStyle2"> &nbsp;{{$invoice->formattedInvoiceDate}}</td>
+                        </tr>
+                        <tr>
+                            <td class="textStyle1" style="text-align: left; color: #55547A">Fecha de vencimiento:</td>
+                            <td class="textStyle2"> &nbsp;{{$invoice->formattedDueDate}}</td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
@@ -480,6 +509,7 @@
                     </p>
                 @endif
                 <p class="bill-user-address">
+
                     @if($invoice->user->billingaddress->address_street_1)
                         {{$invoice->user->billingaddress->address_street_1}}<br>
                     @endif
@@ -500,32 +530,19 @@
                     @endif
                     @if($invoice->user->billingaddress->phone)
                         <p class="bill-user-phone">
-                            Phone :{{$invoice->user->billingaddress->phone}}
+                            Tel. :{{$invoice->user->billingaddress->phone}}
                         </p>
                     @endif
                 </p>
                 </div>
-                <div style="float:right;">
-                </div>
+                <div style="float:right;"></div>
                 <div style="clear: both;"></div>
             </div>
 
-            <div class="job-add">
-                <table>
-                    <tr>
-                        <td class="textStyle1" style="text-align: left; color: #55547A">Invoice Number</td>
-                        <td class="textStyle2"> &nbsp;{{$invoice->invoice_number}}</td>
-                    </tr>
-                    <tr>
-                        <td class="textStyle1" style="text-align: left; color: #55547A">Invoice Date </td>
-                        <td class="textStyle2"> &nbsp;{{$invoice->formattedInvoiceDate}}</td>
-                    </tr>
-                    <tr>
-                        <td class="textStyle1" style="text-align: left; color: #55547A">Due date</td>
-                        <td class="textStyle2"> &nbsp;{{$invoice->formattedDueDate}}</td>
-                    </tr>
-                </table>
-            </div>
+            <p class="bill-user-iti">
+                {{$invoice->user->taxIdentificationNumberType->name}} {{$invoice->user->itin}}<br>
+                {{$invoice->user->taxIdentificationType->name}}
+            </p>
             <div style="clear: both;"></div>
         </div>
         @include('app.pdf.invoice.partials.table')

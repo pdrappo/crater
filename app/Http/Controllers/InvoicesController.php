@@ -99,11 +99,12 @@ class InvoicesController extends Controller
         $number_attributes['invoice_number'] = $invoice_number[0].'-'.sprintf('%06d', intval($invoice_number[1]));
 
         Validator::make($number_attributes, [
-            'invoice_number' => 'required|unique:invoices,invoice_number'
+            'invoice_number' => 'required|unique:invoices,invoice_number,'
         ])->validate();
 
         $invoice_date = Carbon::createFromFormat('d/m/Y', $request->invoice_date);
         $due_date = Carbon::createFromFormat('d/m/Y', $request->due_date);
+        $cae_expiration_date = Carbon::createFromFormat('d/m/Y', $request->cae_expiration_date);
         $status = Invoice::STATUS_DRAFT;
 
         $tax_per_item = CompanySetting::getSetting('tax_per_item', $request->header('company')) ?? 'NO';
@@ -113,9 +114,58 @@ class InvoicesController extends Controller
             $status = Invoice::STATUS_SENT;
         }
 
+        $company = Company::find($request->company_id);
+
+        // Crear Factura
+        $produccion = env('AFIP_INVOICE_PRODUCTION', false);
+        $certificado = $produccion ? 'certificado-produccion.crt' : 'certificado-test.crt';
+        $afip = new Afip(
+            array(
+            'CUIT' => 23316829759,
+            'res_folder' => storage_path('app/afip/certificados'),
+            'ta_folder' => storage_path('app/afip/tokens'),
+            'cert' => $certificado,
+            'key' => 'pdrappo-clave-afip.key',
+            'production' => $produccion
+            )
+        );
+
+        $data = array(
+            'CantReg' 	=> 1,  // Cantidad de comprobantes a registrar
+            'PtoVta' 	=> env('AFIP_INVOICE_BUSINESS_POINT', 1),  // Punto de venta
+            'CbteTipo' 	=> 11,  // Tipo de comprobante (ver tipos disponibles), Factura C
+            'Concepto' 	=> 1,  // Concepto del Comprobante: (1)Productos, (2)Servicios, (3)Productos y Servicios
+            'DocTipo' 	=> 99, // Tipo de documento del comprador (80 CUIT, 96 DNI, 99 CONSUMIDOR FINAL)
+            'DocNro' 	=> 0,  // Número de documento del comprador (0 consumidor final)
+            'CbteDesde' 	=> 1,  // Número de comprobante o numero del primer comprobante en caso de ser mas de uno
+            'CbteHasta' 	=> 1,  // Número de comprobante o numero del último comprobante en caso de ser mas de uno
+            'CbteFch' 	=> intval(date('Ymd')), // (Opcional) Fecha del comprobante (yyyymmdd) o fecha actual si es nulo
+            'ImpTotal' 	=> 100, // Importe total del comprobante
+            'ImpTotConc' 	=> 0,   // Importe neto no gravado
+            'ImpNeto' 	=> 100, // Importe neto gravado
+            'ImpOpEx' 	=> 0,   // Importe exento de IVA
+            'ImpIVA' 	=> 0,  //Importe total de IVA, valor 0 si es comprobante tipo c
+            'ImpTrib' 	=> 0,   //Importe total de tributos
+            'MonId' 	=> 'PES', //Tipo de moneda usada en el comprobante (ver tipos disponibles)('PES' para pesos argentinos)
+            'MonCotiz' 	=> 1,     // Cotización de la moneda usada (1 para pesos argentinos)
+            'Iva' 		=> array( // (Opcional) Alícuotas asociadas al comprobante
+                array(
+                    'Id' 		=> 5, // Id del tipo de IVA (5 para 21%)(ver tipos disponibles)
+                    'BaseImp' 	=> 100, // Base imponible
+                    'Importe' 	=> 21 // Importe
+                )
+            ),
+        );
+
+        $factura_afip = $afip->ElectronicBilling->CreateVoucher($data, true);
+
         $invoice = Invoice::create([
             'invoice_date' => $invoice_date,
             'due_date' => $due_date,
+            'invoice_code_id' => $request->invoice_code_id,
+            'business_point_number' => 2,
+            'cae_number' => $cae_number,
+            'cae_expiration_date' => $cae_expiration_date,
             'invoice_number' => $number_attributes['invoice_number'],
             'reference_number' => $request->reference_number,
             'user_id' => $request->user_id,
@@ -259,6 +309,7 @@ class InvoicesController extends Controller
     {
         $invoice_number = explode("-",$request->invoice_number);
         $number_attributes['invoice_number'] = $invoice_number[0].'-'.sprintf('%06d', intval($invoice_number[1]));
+        $cae_expiration_date = Carbon::createFromFormat('d/m/Y', $request->cae_expiration_date);
 
         Validator::make($number_attributes, [
             'invoice_number' => 'required|unique:invoices,invoice_number'.','.$id
@@ -292,6 +343,11 @@ class InvoicesController extends Controller
 
         $invoice->invoice_date = $invoice_date;
         $invoice->due_date = $due_date;
+        $invoice->business_point_number = 2;
+        $invoice->cae_number = $request->cae_number;
+        $invoice->cae_expiration_date = $request->cae_expiration_date;
+        $invoice->invoice_type_id = $request->invoice_code_id;
+        $invoice->invoice_type = Invoice::TYPE_FB;
         $invoice->invoice_number =  $number_attributes['invoice_number'];
         $invoice->reference_number = $request->reference_number;
         $invoice->user_id = $request->user_id;
@@ -586,5 +642,52 @@ class InvoicesController extends Controller
         return response()->json([
             'invoice' => $invoice
         ]);
+    }
+
+    public function generateAfipInvoice($cuit, $cliente){
+        $produccion = env('AFIP_INVOICE_PRODUCTION', false);
+        $certificado = $produccion ? 'certificado-produccion.crt' : 'certificado-test.crt';
+        $afip = new Afip(
+            array(
+            'CUIT' => 23316829759,
+            'res_folder' => '/home/pdrappo/code/afip.php/cert/',
+            'ta_folder' => '/home/pdrappo/code/afip.php/ta/',
+            'cert' => $cuit,
+            'key' => 'pdrappo-clave-afip.key',
+            'production' => $produccion
+            )
+        );
+
+        $data = array(
+            'CantReg' 	=> 1,  // Cantidad de comprobantes a registrar
+            'PtoVta' 	=> env('AFIP_INVOICE_BUSINESS_POINT', 1),  // Punto de venta
+            'CbteTipo' 	=> 11,  // Tipo de comprobante (ver tipos disponibles), Factura C
+            'Concepto' 	=> 1,  // Concepto del Comprobante: (1)Productos, (2)Servicios, (3)Productos y Servicios
+            'DocTipo' 	=> 99, // Tipo de documento del comprador (80 CUIT, 96 DNI, 99 CONSUMIDOR FINAL)
+            'DocNro' 	=> 0,  // Número de documento del comprador (0 consumidor final)
+            'CbteDesde' 	=> 1,  // Número de comprobante o numero del primer comprobante en caso de ser mas de uno
+            'CbteHasta' 	=> 1,  // Número de comprobante o numero del último comprobante en caso de ser mas de uno
+            'CbteFch' 	=> intval(date('Ymd')), // (Opcional) Fecha del comprobante (yyyymmdd) o fecha actual si es nulo
+            'ImpTotal' 	=> 100, // Importe total del comprobante
+            'ImpTotConc' 	=> 0,   // Importe neto no gravado
+            'ImpNeto' 	=> 100, // Importe neto gravado
+            'ImpOpEx' 	=> 0,   // Importe exento de IVA
+            'ImpIVA' 	=> 0,  //Importe total de IVA, valor 0 si es comprobante tipo c
+            'ImpTrib' 	=> 0,   //Importe total de tributos
+            'MonId' 	=> 'PES', //Tipo de moneda usada en el comprobante (ver tipos disponibles)('PES' para pesos argentinos)
+            'MonCotiz' 	=> 1,     // Cotización de la moneda usada (1 para pesos argentinos)
+            'Iva' 		=> array( // (Opcional) Alícuotas asociadas al comprobante
+                array(
+                    'Id' 		=> 5, // Id del tipo de IVA (5 para 21%)(ver tipos disponibles)
+                    'BaseImp' 	=> 100, // Base imponible
+                    'Importe' 	=> 21 // Importe
+                )
+            ),
+        );
+
+        return $afip->ElectronicBilling->CreateVoucher($data, true);
+        //$res['CAE']; //CAE asignado el comprobante
+        //$res['CAEFchVto']; //Fecha de vencimiento del CAE (yyyy-mm-dd)
+
     }
 }

@@ -14,11 +14,11 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('itin_type_id')->unsigned()->nullable();
+            $table->integer('itin_type_id')->unsigned()->nullable(); // Tipo de numero de documento
             $table->foreign('itin_type_id')->references('id')->on('itin_types');
-            $table->integer('iti_type_id')->unsigned()->nullable();
+            $table->integer('iti_type_id')->unsigned()->nullable();  // Tipo de tributo
             $table->foreign('iti_type_id')->references('id')->on('iti_types');
-            $table->bigInteger('itin')->index()->nullable();
+            $table->bigInteger('itin')->index()->nullable(); // Numero de documento
             $table->string('name');
             $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();

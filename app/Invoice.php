@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class Invoice extends Model
 {
+    const TYPE_FB = 'TYPE_FB';
+    const TYPE_FA = 'TYPE_FA';
+    const TYPE_NC = 'TYPE_NC';
+    const TYPE_ND = 'TYPE_ND';
+
     const STATUS_DRAFT = 'DRAFT';
     const STATUS_SENT = 'SENT';
     const STATUS_VIEWED = 'VIEWED';
@@ -24,7 +29,8 @@ class Invoice extends Model
         'updated_at',
         'deleted_at',
         'invoice_date',
-        'due_date'
+        'due_date',
+        'cae_expiration_date'
     ];
 
     protected $casts = [
@@ -38,7 +44,10 @@ class Invoice extends Model
     protected $fillable = [
         'invoice_date',
         'due_date',
+        'business_point_number',
         'invoice_number',
+        'cae_number',
+        'cae_expiration_date',
         'reference_number',
         'user_id',
         'company_id',

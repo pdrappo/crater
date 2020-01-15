@@ -18,6 +18,8 @@ class Company extends Model implements HasMedia
         'itin', // Numero de documento
         'itin_type_id', // Tipo de numero de documento
         'iti_type_id', // Tipo de tributo
+        'iibb', // Numero de ingresos brutos
+        'bad', // Fecha de inicio de actividades
     ];
 
     protected $appends=['logo'];

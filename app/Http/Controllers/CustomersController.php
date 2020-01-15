@@ -173,6 +173,8 @@ class CustomersController extends Controller
         $customer->itin = $request->itin; // Numero de documento
         $customer->itin_type_id = $request->itin_type_id; // Tipo de numero de documento
         $customer->iti_type_id = $request->iti_type_id; // Tipo de tributo
+        $customer->iibb = $request->iibb; // Numero de ingresos brutos
+        $customer->bad = $request->bad; // Fecha de inicio de actividades
         $customer->name = $request->name;
         $customer->currency_id = $request->currency_id;
         $customer->email = $request->email;

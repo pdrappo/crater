@@ -18,11 +18,13 @@ class CreateCompaniesTable extends Migration
             $table->string('name');
             $table->string('logo')->nullable();
             $table->string('unique_hash')->nullable();
-            $table->integer('itin_type_id')->unsigned()->nullable();
-            //$table->foreign('itin_type_id')->references('id')->on('itin_types');
-            $table->integer('iti_type_id')->unsigned()->nullable();
-            //$table->foreign('iti_type_id')->references('id')->on('iti_types');
-            $table->bigInteger('itin')->index()->nullable();
+            $table->integer('itin_type_id')->unsigned();
+            $table->foreign('itin_type_id')->references('id')->on('itin_types');
+            $table->integer('iti_type_id')->unsigned();
+            $table->foreign('iti_type_id')->references('id')->on('iti_types');
+            $table->bigInteger('itin')->index();
+            $table->date('bad'); // Begining Activities Date (Fecha de inicio de actividades)
+            $table->string('iibb');  // Numero de ingresos brutos
             $table->timestamps();
         });
     }

@@ -223,6 +223,8 @@ export default {
         iti_type_id: 1,
         address_street_1: '',
         address_street_2: '',
+        iibb: '',
+        bad: null,
         city: '',
         state: '',
         country_id: '',
@@ -244,6 +246,15 @@ export default {
         required
       },
       country_id: {
+        required
+      },
+      itin: {
+        required
+      },
+      bad: {
+        required
+      },
+      iibb: {
         required
       },
       itin_type_id: {
