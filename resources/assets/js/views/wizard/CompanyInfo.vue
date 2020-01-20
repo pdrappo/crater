@@ -80,6 +80,33 @@
       </div>
       <div class="row">
         <div class="col-md-6">
+          <label class="form-label">{{ $t('wizard.iibb') }}</label><span class="text-danger"> *</span>
+          <base-input
+            :invalid="$v.companyData.iibb.$error"
+            v-model.trim="companyData.iibb"
+            type="text"
+            name="name"
+            @input="$v.companyData.iibb.$touch()"
+          />
+          <div v-if="$v.companyData.iibb.$error">
+            <span v-if="!$v.companyData.iibb.required" class="text-danger">{{ $tc('validation.required') }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">{{ $t('wizard.bad') }}</label><span class="text-danger"> *</span>
+          <base-date-picker
+            v-model="companyData.bad"
+            :calendar-button="true"
+            calendar-button-icon="calendar"
+            @change="$v.companyData.bad.$touch()"
+          />
+          <div v-if="$v.companyData.bad.$error">
+            <span v-if="!$v.companyData.bad.required" class="text-danger">{{ $tc('validation.required') }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
           <label class="form-label">{{ $t('wizard.company_name') }}</label><span class="text-danger"> *</span>
           <base-input
             :invalid="$v.companyData.name.$error"
@@ -193,6 +220,7 @@
 import MultiSelect from 'vue-multiselect'
 import AvatarCropper from 'vue-avatar-cropper'
 import { validationMixin } from 'vuelidate'
+import moment from 'moment'
 const { required, maxLength } = require('vuelidate/lib/validators')
 
 export default {
@@ -289,6 +317,9 @@ export default {
     this.fetchCountry()
     this.fetchTaxIdentificationNumberType()
     this.fetchTaxIdentificationType()
+    let today = new Date()
+    this.companyData.bad = moment(today).toString()
+    console.log(this.companyData.bad)
   },
   methods: {
     cropperHandler (cropper) {
@@ -306,6 +337,7 @@ export default {
         return true
       }
       this.loading = true
+      this.companyData.bad = moment(this.companyData.bad).format('DD/MM/YYYY')
       let response = await window.axios.post('/api/admin/onboarding/company', this.companyData)
 
       if (response.data) {

@@ -840,7 +840,9 @@
     },
     "itin_type": "Tipo de Documento",
     "iti_type": "Tipo IVA",
-    "itin": "DNI/CUIT"
+    "itin": "DNI/CUIT",
+    "iibb": "Nº Ingresos Brutos",
+    "bad": "Inicio de actividades"
 },
   "layout_login": {
     "copyright_crater": "Copyright @ Crater - 2020",

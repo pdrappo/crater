@@ -15,7 +15,7 @@ class SettingsSeeder extends Seeder
      */
     public function run()
     {
-        $company = Company::create(['name' => 'TEST', 'unique_hash' => str_random(60)]);
+        $company = Company::create(['name' => 'TEST', 'unique_hash' => str_random(60), 'itin' => 11111111111, 'itin_type_id' => 1, 'iti_type_id' => 1]);
 
         $user = User::find(1);
         $user->company_id = $company->id;

@@ -119,7 +119,7 @@ class InvoicesController extends Controller
         // Crear Factura
         $produccion = env('AFIP_INVOICE_PRODUCTION', false);
         $certificado = $produccion ? 'certificado-produccion.crt' : 'certificado-test.crt';
-        $afip = new Afip(
+        $afip = new \Afip(
             array(
             'CUIT' => 23316829759,
             'res_folder' => storage_path('app/afip/certificados'),
@@ -164,7 +164,7 @@ class InvoicesController extends Controller
             'due_date' => $due_date,
             'invoice_code_id' => $request->invoice_code_id,
             'business_point_number' => 2,
-            'cae_number' => $cae_number,
+            'cae_number' => 121231231,
             'cae_expiration_date' => $cae_expiration_date,
             'invoice_number' => $number_attributes['invoice_number'],
             'reference_number' => $request->reference_number,
@@ -243,7 +243,8 @@ class InvoicesController extends Controller
 
         return response()->json([
             'url' => url('/invoices/pdf/'.$invoice->unique_hash),
-            'invoice' => $invoice
+            'invoice' => $invoice,
+            'afip' => $factura_afip
         ]);
     }
 

@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CountriesTableSeeder::class);
         $this->call(EstimateTemplateSeeder::class);
         $this->call(InvoiceTemplateSeeder::class);
-        $this->call(SettingsSeeder::class);
-        $this->call(TaxTypeSeeder::class);
         $this->call(TaxIdentificationNumberTypeSeeder::class);
         $this->call(TaxIdentificationTypeSeeder::class);
+        $this->call(SettingsSeeder::class);
+        $this->call(TaxTypeSeeder::class);
 
     }
 }

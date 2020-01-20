@@ -2,6 +2,7 @@
 namespace Crater\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Crater\User;
 use Crater\Company;
 use Crater\Address;
@@ -175,7 +176,7 @@ class OnboardingController extends Controller
         $company->itin_type_id = $request->itin_type_id; // Tipo de numero de documento
         $company->iti_type_id = $request->iti_type_id; // Tipo de tributo
         $company->iibb = $request->iibb; // Numero de ingresos brutos
-        $company->bad = $request->bad; // Fecha de inicio de actividades
+        $company->bad = Carbon::createFromFormat('d/m/Y', $request->bad); // Fecha de inicio de actividades
         $company->unique_hash = str_random(60);
         $company->save();
         $user->company()->associate($company);

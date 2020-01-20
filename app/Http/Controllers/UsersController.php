@@ -62,7 +62,7 @@ class UsersController extends Controller
             ->latest()
             ->get();
 
-        $iti_types = TaxIdentificationType::with('taxType')->get();
+        $iti_types = TaxIdentificationType::all();
         $itin_types = TaxIdentificationNumberType::all();
 
         return response()->json([

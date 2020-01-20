@@ -13,9 +13,4 @@ class TaxIdentificationType extends Model
         'tax_type_id'
     ];
 
-    public function taxType()
-    {
-        return $this->belongsTo(TaxType::class);
-    }
-
 }
